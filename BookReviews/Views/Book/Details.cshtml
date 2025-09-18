@@ -1,0 +1,86 @@
+﻿@model BookReviews.Models.Dto.BookDetailsViewModel
+
+<h2>@Model.Title</h2>
+<p><strong>Author:</strong> @Model.Author</p>
+<p><strong>Year:</strong> @Model.PublishedYear</p>
+<p><strong>Genre:</strong> @Model.Genre</p>
+
+<hr />
+<h3>Reviews</h3>
+
+@if (Model.Reviews.Any())
+{
+    <ul class="list-group">
+        @foreach (var r in Model.Reviews)
+        {
+            <li class="list-group-item">
+                <strong>@r.Rating/5</strong> - @r.Content <br />
+                <small>by @r.UserName on @r.Created.ToShortDateString()</small>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No reviews yet.</p>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <hr />
+    <h4>Submit Review</h4>
+    <form asp-controller="Reviews" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="NewReview.BookId" />
+
+        <style>
+            .rating {
+                display: inline-flex;
+                flex-direction: row-reverse;
+                gap: .25rem;
+            }
+
+                .rating input {
+                    display: none;
+                }
+
+                .rating label {
+                    cursor: pointer;
+                    font-size: 1.5rem;
+                    line-height: 1;
+                    color: #ccc;
+                }
+
+                    .rating input:checked ~ label,
+                    .rating label:hover,
+                    .rating label:hover ~ label {
+                        color: #f5c518;
+                    }
+        </style>
+
+        <div class="mb-3">
+            <label asp-for="NewReview.Rating" class="form-label">Rating</label>
+            <div class="rating">
+                @for (int i = 5; i >= 1; i--)
+                {
+                    <input type="radio" id="star-@i" name="NewReview.Rating" value="@i" />
+                    <label for="star-@i">★</label>
+                }
+            </div>
+            <span asp-validation-for="NewReview.Rating" class="text-danger"></span>
+        </div>
+
+
+        <div class="mb-3">
+            <label asp-for="NewReview.Content"></label>
+            <textarea asp-for="NewReview.Content" class="form-control"></textarea>
+            <span asp-validation-for="NewReview.Content" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+}
+else
+{
+    <p><a href="/Identity/Account/Login">Log in</a> to write a review.</p>
+}

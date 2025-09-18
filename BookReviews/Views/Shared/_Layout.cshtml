@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BookReviews</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BookReviews.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookReviews</a>
+
+                @if (User.IsInRole("Admin"))    
+                {
+                    <a class="nav-link text-dark" asp-controller="Book" asp-action="AdminCrud">Admin Crud</a>
+                }
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item me-2">
+                                <span class="nav-link text-dark">Hello, @User.Identity.Name!</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-area="Identity" asp-page="/Account/Logout"
+                                      asp-route-returnUrl="@Url.Action("Index", "Home")"
+                                      method="post" class="form-inline">
+                                    <button type="submit" class="btn btn-link nav-link text-dark">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+            @{
+                var toasts = new List<(string Variant, string Message)>();
+                if (TempData["Success"] is string s1) toasts.Add(("success", s1));
+                if (TempData["Error"] is string s2) toasts.Add(("danger", s2));
+                if (TempData["Info"] is string s3) toasts.Add(("info", s3));
+                if (TempData["Warning"] is string s4) toasts.Add(("warning", s4));
+                if (TempData["Secondary"] is string s5) toasts.Add(("secondary", s5)); // ουδέτερο
+            }
+            @if (toasts.Any())
+            {
+        <div class="position-fixed top-0 end-0 p-3" style="z-index:1200;">
+            @foreach (var t in toasts)
+            {
+                    <div class="toast text-bg-@t.Variant border-0 mb-2" role="status" aria-live="polite" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">@t.Message</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+            }
+        </div>
+}
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          document.querySelectorAll('.toast').forEach(function (el) {
+            var t = bootstrap.Toast.getOrCreateInstance(el, { delay: 3000, autohide: true });
+            t.show();
+          });
+        });
+    </script>
+
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

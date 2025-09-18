@@ -1,0 +1,42 @@
+﻿@model BookReviews.Models.Dto.BookDto
+@{
+    ViewData["Title"] = "Edit Book";
+    var id = (Guid)ViewBag.Id;
+}
+<h2>Edit Book</h2>
+
+<form asp-action="Edit" asp-route-id="@id" method="post">
+    @Html.AntiForgeryToken()  
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Author" class="form-label"></label>
+        <input asp-for="Author" class="form-control" />
+        <span asp-validation-for="Author" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PublishedYear" class="form-label"></label>
+        <input asp-for="PublishedYear" type="number" class="form-control" />
+        <span asp-validation-for="PublishedYear" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Genre" class="form-label"></label>
+        <input asp-for="Genre" class="form-control" />
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="AdminCrud" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

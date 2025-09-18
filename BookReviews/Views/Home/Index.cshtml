@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="d-flex justify-content-center align-items-start min-vh-100 mt-5">
+    <div class="card shadow-lg" style="width: 30rem;">
+        <div class="card-body text-center">
+            <h2 class="card-title mb-3">Welcome to Book Review Project</h2>
+            <p class="card-text text-muted">
+                Explore books, read reviews, and share your own!
+            </p>
+
+            <a asp-controller="Book" asp-action="Index" class="btn btn-primary mt-3">
+                Go to Book Reviews
+            </a>
+
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <hr />
+
+                <p class="mt-2">
+                    <a asp-area="Identity" asp-page="/Account/Login"
+                       class="btn btn-outline-primary btn-sm ms-2">
+                        Login 
+                    </a>
+                </p>
+
+                <p class="mt-3">
+                    Don’t have an account?
+                    <a asp-area="Identity" asp-page="/Account/Register"
+                       class="btn btn-outline-success btn-sm ms-2">
+                        Register Here
+                    </a>
+                </p>
+
+         
+            }
+        </div>
+    </div>
+</div>
